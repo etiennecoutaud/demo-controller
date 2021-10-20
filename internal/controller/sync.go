@@ -44,22 +44,6 @@ func (c *Controller) SyncHandler(key string) error {
 		c.Recorder.Event(app, corev1.EventTypeWarning, ErrResourceExists, msg)
 		return fmt.Errorf("%s", msg)
 	}
-
-	if app.Spec.Replicas != nil && *app.Spec.Replicas != *deployment.Spec.Replicas {
-		klog.V(4).Infof("Application %s replicas: %d, deployment replicas: %d", name, *app.Spec.Replicas, *deployment.Spec.Replicas)
-		deployment, err = c.Kubeclientset.AppsV1().Deployments(app.Namespace).Update(context.TODO(), NewDeployment(app), metav1.UpdateOptions{})
-	}
-
-	container := mainContainerFromDeploymentTemplate(deployment)
-	if app.Spec.ImageName != container.Image {
-		klog.V(4).Infof("Application %s image: %s, deployment image: %d", name, app.Spec.ImageName, container.Image)
-		deployment, err = c.Kubeclientset.AppsV1().Deployments(app.Namespace).Update(context.TODO(), NewDeployment(app), metav1.UpdateOptions{})
-	}
-
-	if err != nil {
-		return err
-	}
-
 	err = c.updateApplicationStatus(app, deployment)
 	if err != nil {
 		return err

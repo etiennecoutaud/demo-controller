@@ -27,7 +27,7 @@ If you updated `pkg/apis` don't forget to run
 make gen
 ```
 
-:info: Locally the controller will share the same kubernetes profile than yours in your current context, this profile must have enough RBAC
+Locally the controller will share the same kubernetes profile than yours in your current context, this profile must have enough RBAC
 
 ### Install CRD on your cluster
 
